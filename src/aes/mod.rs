@@ -20,7 +20,7 @@ pub trait AesEncrypt<T> {
     fn encrypt(key: T, data: AesBlock) -> AesBlock;
 }
 pub trait AesDecrypt<T> {
-    fn decrypt(key: T, data: AesBlock);
+    fn decrypt(key: T, data: AesBlock) -> AesBlock;
 }
 
 mod utils;
@@ -34,5 +34,6 @@ mod mix_columns;
 mod shift_rows;
 mod sub_bytes;
 
+mod decrypt;
 mod encrypt;
 
