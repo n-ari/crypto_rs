@@ -12,7 +12,7 @@ CTF の Crypto 問題を解くため、暗号研究においてプロトタイ�
 ## 実装状況
 
 - [x] AES Block Cipher (Rijndael) (鍵長 128 bit, 192 bit, 256 bit)
-  - [ ] AES-CBC
+  - [x] AES-CBC
   - [ ] AES-CTR
   - [ ] AES-GCM
 
