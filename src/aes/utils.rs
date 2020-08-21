@@ -1,3 +1,5 @@
+use rand::Rng;
+use std::ops::BitXor;
 use std::str;
 use std::u8;
 
@@ -69,4 +71,32 @@ impl_from_for!(AesBlock, 16);
 impl_from_for!(AesKey128, 16);
 impl_from_for!(AesKey192, 24);
 impl_from_for!(AesKey256, 32);
+
+// random generator
+impl AesBlock {
+    pub fn with_random() -> AesBlock {
+        let mut data = [0u8; 16];
+        let mut rng = rand::thread_rng();
+        rng.fill(&mut data);
+        AesBlock { data }
+    }
+    pub fn from_u8_slice(slice: &[u8]) -> AesBlock {
+        assert_eq!(slice.len(), 16);
+        let mut data = [0u8; 16];
+        for i in 0..16 {
+            data[i] = slice[i];
+        }
+        AesBlock { data }
+    }
+}
+impl BitXor for AesBlock {
+    type Output = Self;
+    fn bitxor(self, rhs: Self) -> Self::Output {
+        let mut data = [0u8; 16];
+        for i in 0..16 {
+            data[i] = self.data[i] ^ rhs.data[i];
+        }
+        AesBlock { data }
+    }
+}
 

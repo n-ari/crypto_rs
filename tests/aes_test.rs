@@ -1,4 +1,5 @@
 extern crate crypto_rs;
+use crypto_rs::aes::modes::{cbc::*, *};
 use crypto_rs::aes::*;
 
 #[test]
@@ -47,5 +48,15 @@ fn it_decrypts_with_aes256() {
     let data = AesBlock::from("87d9f5cc4266093bad532c512e7adc35");
     let decrypted = AES::decrypt(key, data);
     assert_eq!(decrypted.to_string(), "deadbeef830252521337655373170000");
+}
+
+#[test]
+fn it_recover_text_with_aes128cbc() {
+    let key = AesKey128::from("0123456789abcdef0123456789abcdef");
+    let data_str = "Hello world! This is a test for AES encryption with CBC mode!!";
+    let data_bytes = data_str.as_bytes();
+    let encrypted = AESCBC::encrypt(key, &data_bytes);
+    let decrypted = AESCBC::decrypt(key, &encrypted);
+    assert_eq!(data_bytes.to_vec(), decrypted);
 }
 

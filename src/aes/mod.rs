@@ -37,3 +37,5 @@ mod sub_bytes;
 mod decrypt;
 mod encrypt;
 
+pub mod modes;
+
