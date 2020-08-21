@@ -1,5 +1,5 @@
 extern crate crypto_rs;
-use crypto_rs::aes::modes::{cbc::*, *};
+use crypto_rs::aes::modes::{cbc::*, ctr::*, *};
 use crypto_rs::aes::*;
 
 #[test]
@@ -57,6 +57,16 @@ fn it_recover_text_with_aes128cbc() {
     let data_bytes = data_str.as_bytes();
     let encrypted = AESCBC::encrypt(key, &data_bytes);
     let decrypted = AESCBC::decrypt(key, &encrypted);
+    assert_eq!(data_bytes.to_vec(), decrypted);
+}
+
+#[test]
+fn it_recover_text_with_aes128ctr() {
+    let key = AesKey128::from("0123456789abcdef0123456789abcdef");
+    let data_str = "Hello world! This is a test for AES encryption with CTR mode!!";
+    let data_bytes = data_str.as_bytes();
+    let encrypted = AESCTR::encrypt(key, &data_bytes);
+    let decrypted = AESCTR::decrypt(key, &encrypted);
     assert_eq!(data_bytes.to_vec(), decrypted);
 }
 

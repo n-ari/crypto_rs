@@ -23,7 +23,7 @@ macro_rules! impl_aesbytesencrypt_for_aescbc {
                 let mut encrypted = Vec::with_capacity(1 + len);
                 encrypted.push(iv);
                 for i in 0..len {
-                    let block = AesBlock::from_u8_slice(&padded[16 * i..16 * (i + 1)]);
+                    let block = AesBlock::from(&padded[16 * i..16 * (i + 1)]);
                     let block = block ^ *encrypted.last().unwrap();
                     encrypted.push(AES::encrypt(key, block));
                 }

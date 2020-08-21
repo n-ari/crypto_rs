@@ -56,7 +56,7 @@ macro_rules! str_to_u8_array {
         data
     }};
 }
-macro_rules! impl_from_for {
+macro_rules! impl_from_str_for {
     ($type:ident, $n:expr) => {
         impl From<&str> for $type {
             fn from(string: &str) -> $type {
@@ -67,28 +67,62 @@ macro_rules! impl_from_for {
         }
     };
 }
-impl_from_for!(AesBlock, 16);
-impl_from_for!(AesKey128, 16);
-impl_from_for!(AesKey192, 24);
-impl_from_for!(AesKey256, 32);
+impl_from_str_for!(AesBlock, 16);
+impl_from_str_for!(AesKey128, 16);
+impl_from_str_for!(AesKey192, 24);
+impl_from_str_for!(AesKey256, 32);
+
+macro_rules! impl_from_u8_slice_for {
+    ($type:ident, $n:expr) => {
+        impl From<&[u8]> for $type {
+            fn from(slice: &[u8]) -> $type {
+                assert_eq!(slice.len(), $n);
+                let mut data = [0u8; $n];
+                for i in 0..$n {
+                    data[i] = slice[i];
+                }
+                $type { data }
+            }
+        }
+    };
+}
+impl_from_u8_slice_for!(AesBlock, 16);
+impl_from_u8_slice_for!(AesKey128, 16);
+impl_from_u8_slice_for!(AesKey192, 24);
+impl_from_u8_slice_for!(AesKey256, 32);
 
 // random generator
-impl AesBlock {
-    pub fn with_random() -> AesBlock {
-        let mut data = [0u8; 16];
-        let mut rng = rand::thread_rng();
-        rng.fill(&mut data);
-        AesBlock { data }
-    }
-    pub fn from_u8_slice(slice: &[u8]) -> AesBlock {
-        assert_eq!(slice.len(), 16);
-        let mut data = [0u8; 16];
-        for i in 0..16 {
-            data[i] = slice[i];
+macro_rules! impl_with_random_for {
+    ($type:ident, $n:expr) => {
+        impl $type {
+            pub fn with_random() -> $type {
+                let mut data = [0u8; $n];
+                let mut rng = rand::thread_rng();
+                rng.fill(&mut data);
+                $type { data }
+            }
         }
-        AesBlock { data }
+    };
+}
+impl_with_random_for!(AesBlock, 16);
+impl_with_random_for!(AesKey128, 16);
+impl_with_random_for!(AesKey192, 24);
+impl_with_random_for!(AesKey256, 32);
+
+// u128 <-> AesBlock
+impl From<u128> for AesBlock {
+    fn from(x: u128) -> AesBlock {
+        AesBlock {
+            data: x.to_be_bytes(),
+        }
     }
 }
+impl From<AesBlock> for u128 {
+    fn from(block: AesBlock) -> u128 {
+        u128::from_be_bytes(block.data)
+    }
+}
+
 impl BitXor for AesBlock {
     type Output = Self;
     fn bitxor(self, rhs: Self) -> Self::Output {
