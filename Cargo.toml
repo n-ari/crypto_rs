@@ -1,11 +1,4 @@
-[package]
-name = "crypto_rs"
-version = "0.1.0"
-authors = ["n-ari <fukunari.r.aa@m.titech.ac.jp>"]
-edition = "2018"
-license = "MIT"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-rand = "0.7.3"
+[workspace]
+members = [
+  "aes",
+]

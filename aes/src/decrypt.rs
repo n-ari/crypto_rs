@@ -1,5 +1,5 @@
-use crate::aes::key_schedule::key_schedule;
-use crate::aes::{AesBlock, AesDecrypt, AesKey, AES};
+use crate::key_schedule::key_schedule;
+use crate::{AesBlock, AesDecrypt, AesKey, AES};
 
 use super::add_key::add_key;
 use super::mix_columns::inv_mix_columns;

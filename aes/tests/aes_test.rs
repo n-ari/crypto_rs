@@ -1,4 +1,4 @@
-use crypto_rs::aes::*;
+use aes::*;
 
 #[test]
 fn it_encrypts_with_aes128() {

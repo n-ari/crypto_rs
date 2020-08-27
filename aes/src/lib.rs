@@ -66,3 +66,11 @@ mod encrypt;
 mod modes;
 pub use self::modes::{cbc::AESCBC, ctr::AESCTR};
 pub use self::modes::{AesBytesDecrypt, AesBytesEncrypt, AesBytesEncryptWithIv};
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+}

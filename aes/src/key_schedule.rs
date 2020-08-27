@@ -1,6 +1,6 @@
-use crate::aes::sbox::SBOX;
-use crate::aes::AesBlock;
-use crate::aes::AesKey;
+use crate::sbox::SBOX;
+use crate::AesBlock;
+use crate::AesKey;
 
 fn lshift_for_gf256(x: u8) -> u8 {
     if (x & 0x80u8) == 0x80u8 {
