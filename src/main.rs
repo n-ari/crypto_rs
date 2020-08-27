@@ -1,4 +1,3 @@
-extern crate crypto_rs;
 use crypto_rs::aes::*;
 
 fn main() {
