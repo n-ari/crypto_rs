@@ -16,34 +16,21 @@ fn xor_word(a: [u8; 4], b: [u8; 4]) -> [u8; 4] {
 fn upshift_word(a: [u8; 4]) -> [u8; 4] {
     [a[1], a[2], a[3], a[0]]
 }
+#[rustfmt::skip]
 fn apply_sbox_word(a: [u8; 4]) -> [u8; 4] {
     [
-        SBOX[a[0] as usize],
-        SBOX[a[1] as usize],
-        SBOX[a[2] as usize],
-        SBOX[a[3] as usize],
+        SBOX[a[0] as usize], SBOX[a[1] as usize], SBOX[a[2] as usize], SBOX[a[3] as usize],
     ]
 }
 
+#[rustfmt::skip]
 fn square_to_aes_block(square: &[[u8; 4]]) -> AesBlock {
     AesBlock {
         data: [
-            square[0][0],
-            square[0][1],
-            square[0][2],
-            square[0][3],
-            square[1][0],
-            square[1][1],
-            square[1][2],
-            square[1][3],
-            square[2][0],
-            square[2][1],
-            square[2][2],
-            square[2][3],
-            square[3][0],
-            square[3][1],
-            square[3][2],
-            square[3][3],
+            square[0][0], square[0][1], square[0][2], square[0][3],
+            square[1][0], square[1][1], square[1][2], square[1][3],
+            square[2][0], square[2][1], square[2][2], square[2][3],
+            square[3][0], square[3][1], square[3][2], square[3][3],
         ],
     }
 }
