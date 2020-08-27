@@ -1,4 +1,4 @@
-use crate::aes::key_schedule::AesKeySchedule;
+use crate::aes::key_schedule::key_schedule;
 use crate::aes::{AesBlock, AesDecrypt, AesKey, AES};
 
 use super::add_key::add_key;
@@ -16,9 +16,9 @@ fn _debug_state(state: AesBlock) {
     print!("\n");
 }
 
-impl<T: AesKey + AesKeySchedule> AesDecrypt<T> for AES {
+impl<T: AesKey> AesDecrypt<T> for AES {
     fn decrypt(key: T, block: AesBlock) -> AesBlock {
-        let expanded_key = key.key_schedule();
+        let expanded_key = key_schedule(key);
         let nround = expanded_key.len();
         let mut state = block;
         add_key(&mut state, expanded_key[nround - 1]);
