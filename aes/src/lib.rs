@@ -5,6 +5,11 @@ pub struct AesBlock {
 
 #[derive(Debug, Clone)]
 pub struct AesKey(Vec<u8>);
+impl AesKey {
+    pub fn new(key: Vec<u8>) -> Self {
+        Self(key)
+    }
+}
 
 #[derive(Debug, Copy, Clone)]
 pub enum AesKeySize {
