@@ -1,5 +1,5 @@
 use crate::key_schedule::key_schedule;
-use crate::{AesBlock, AesDecrypt, AesKey, AES};
+use crate::{AesBlock, AesDecrypt, AesKey, Aes};
 
 use super::add_key::add_key;
 use super::mix_columns::inv_mix_columns;
@@ -16,7 +16,7 @@ fn _debug_state(state: AesBlock) {
     print!("\n");
 }
 
-impl<T: AesKey> AesDecrypt<T> for AES {
+impl<T: AesKey> AesDecrypt<T> for Aes {
     fn decrypt(key: T, block: AesBlock) -> AesBlock {
         let expanded_key = key_schedule(key);
         let nround = expanded_key.len();

@@ -41,7 +41,7 @@ impl AesKey for AesKey256 {
     }
 }
 
-pub struct AES {}
+pub struct Aes {}
 pub trait AesEncrypt<T: AesKey> {
     fn encrypt(key: T, data: AesBlock) -> AesBlock;
 }
@@ -64,7 +64,7 @@ mod decrypt;
 mod encrypt;
 
 mod modes;
-pub use self::modes::{cbc::AESCBC, ctr::AESCTR};
+pub use self::modes::{cbc::AesCbc, ctr::AesCtr};
 pub use self::modes::{AesBytesDecrypt, AesBytesEncrypt, AesBytesEncryptWithIv};
 
 #[cfg(test)]

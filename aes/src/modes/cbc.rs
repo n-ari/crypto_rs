@@ -3,11 +3,11 @@ use super::AesBytesDecrypt;
 use super::AesBytesEncrypt;
 use super::{pad, unpad};
 
-pub struct AESCBC;
+pub struct AesCbc;
 
 macro_rules! impl_aesbytesencrypt_for_aescbc {
     ($keytype: ty) => {
-        impl AesBytesEncrypt<$keytype> for AESCBC {
+        impl AesBytesEncrypt<$keytype> for AesCbc {
             fn encrypt(key: $keytype, bytes: &[u8]) -> Vec<AesBlock> {
                 // generate iv
                 let iv = AesBlock::with_random();
@@ -21,7 +21,7 @@ macro_rules! impl_aesbytesencrypt_for_aescbc {
                 for i in 0..len {
                     let block = padded[i];
                     let xored_block = block ^ *encrypted.last().unwrap();
-                    encrypted.push(AES::encrypt(key, xored_block));
+                    encrypted.push(Aes::encrypt(key, xored_block));
                 }
 
                 encrypted
@@ -35,7 +35,7 @@ impl_aesbytesencrypt_for_aescbc!(AesKey256);
 
 macro_rules! impl_aesbytesdecrypt_for_aescbc {
     ($keytype: ty) => {
-        impl AesBytesDecrypt<$keytype> for AESCBC {
+        impl AesBytesDecrypt<$keytype> for AesCbc {
             fn decrypt(key: $keytype, bytes: &[AesBlock]) -> Vec<u8> {
                 // decrypt
                 let len = bytes.len() - 1;
@@ -43,7 +43,7 @@ macro_rules! impl_aesbytesdecrypt_for_aescbc {
                 for i in 0..len {
                     let before_block = bytes[i];
                     let cipher_block = bytes[i + 1];
-                    decrypted.push(before_block ^ AES::decrypt(key, cipher_block));
+                    decrypted.push(before_block ^ Aes::decrypt(key, cipher_block));
                 }
                 // unpad
                 unpad(&decrypted)
