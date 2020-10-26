@@ -1,15 +1,14 @@
-use super::sbox;
-use super::AesBlock;
+use crate::ops::sbox;
+use crate::AesBlock;
 
-pub(super) fn sub_bytes(state: &mut AesBlock) {
+pub(crate) fn sub_bytes(state: &mut AesBlock) {
     for i in 0..16 {
         state.data[i] = sbox::SBOX[state.data[i] as usize];
     }
 }
 
-pub(super) fn inv_sub_bytes(state: &mut AesBlock) {
+pub(crate) fn inv_sub_bytes(state: &mut AesBlock) {
     for i in 0..16 {
         state.data[i] = sbox::INVERT_SBOX[state.data[i] as usize];
     }
 }
-

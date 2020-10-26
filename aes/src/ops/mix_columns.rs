@@ -1,4 +1,4 @@
-use super::AesBlock;
+use crate::AesBlock;
 
 fn mul(a: u8, b: u8) -> u8 {
     let mut ret = 0u8;
@@ -18,7 +18,7 @@ fn mul(a: u8, b: u8) -> u8 {
     ret
 }
 
-pub(super) fn mix_columns(state: &mut AesBlock) {
+pub(crate) fn mix_columns(state: &mut AesBlock) {
     for i in 0..4 {
         let [a, b, c, d] = [
             state.data[4 * i + 0],
@@ -33,7 +33,7 @@ pub(super) fn mix_columns(state: &mut AesBlock) {
     }
 }
 
-pub(super) fn inv_mix_columns(state: &mut AesBlock) {
+pub(crate) fn inv_mix_columns(state: &mut AesBlock) {
     for i in 0..4 {
         let [a, b, c, d] = [
             state.data[4 * i + 0],
@@ -47,4 +47,3 @@ pub(super) fn inv_mix_columns(state: &mut AesBlock) {
         state.data[4 * i + 3] = mul(a, 11) ^ mul(b, 13) ^ mul(c, 9) ^ mul(d, 14);
     }
 }
-

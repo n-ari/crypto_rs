@@ -1,10 +1,5 @@
-use crate::key_schedule::key_schedule;
-use crate::{AesBlock, AesEncrypt, AesKey, Aes};
-
-use super::add_key::add_key;
-use super::mix_columns::mix_columns;
-use super::shift_rows::shift_rows;
-use super::sub_bytes::sub_bytes;
+use crate::ops::{add_key, key_schedule, mix_columns, shift_rows, sub_bytes};
+use crate::{Aes, AesBlock, AesEncrypt, AesKey};
 
 fn _debug_state(state: AesBlock) {
     for i in 0..4 {
@@ -34,4 +29,3 @@ impl<T: AesKey> AesEncrypt<T> for Aes {
         state
     }
 }
-

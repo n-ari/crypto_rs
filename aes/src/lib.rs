@@ -49,28 +49,11 @@ pub trait AesDecrypt<T: AesKey> {
     fn decrypt(key: T, data: AesBlock) -> AesBlock;
 }
 
-mod utils;
-
-mod sbox;
-
-mod key_schedule;
-
-mod add_key;
-mod mix_columns;
-mod shift_rows;
-mod sub_bytes;
-
 mod decrypt;
 mod encrypt;
+mod ops;
+mod utils;
 
 mod modes;
 pub use self::modes::{cbc::AesCbc, ctr::AesCtr};
 pub use self::modes::{AesBytesDecrypt, AesBytesEncrypt, AesBytesEncryptWithIv};
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}

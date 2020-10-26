@@ -38,4 +38,3 @@ fn unpad(blocks: &[AesBlock]) -> Vec<u8> {
     let original_len = len - (padded_len as usize);
     bytes[0..original_len].to_vec()
 }
-

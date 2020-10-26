@@ -133,4 +133,3 @@ impl BitXor for AesBlock {
         AesBlock { data }
     }
 }
-

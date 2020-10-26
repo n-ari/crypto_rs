@@ -1,4 +1,4 @@
-use crate::sbox::SBOX;
+use crate::ops::sbox::SBOX;
 use crate::AesBlock;
 use crate::AesKey;
 
@@ -72,4 +72,3 @@ pub fn key_schedule<T: AesKey>(key: T) -> Vec<AesBlock> {
 
     key
 }
-
