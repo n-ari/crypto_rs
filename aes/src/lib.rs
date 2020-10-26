@@ -38,6 +38,7 @@ impl AesKeySize {
 }
 
 pub use definitions::SymmetricKeyEncryption;
+#[derive(Debug, Copy, Clone)]
 pub struct Aes {
     keysize: AesKeySize,
 }
