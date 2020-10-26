@@ -3,10 +3,7 @@ use std::ops::BitXor;
 use std::str;
 use std::u8;
 
-use super::AesBlock;
-use super::AesKey128;
-use super::AesKey192;
-use super::AesKey256;
+use crate::{AesBlock, AesKey};
 
 // to_string methods
 fn u8_array_to_string(array: &[u8]) -> String {
@@ -16,19 +13,17 @@ fn u8_array_to_string(array: &[u8]) -> String {
     }
     ret
 }
-macro_rules! impl_tostring_for {
-    ($type: ident) => {
-        impl ToString for $type {
-            fn to_string(&self) -> String {
-                u8_array_to_string(&self.data)
-            }
-        }
-    };
+use std::fmt::{Display, Formatter};
+impl Display for AesBlock {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", u8_array_to_string(&self.data))
+    }
 }
-impl_tostring_for!(AesBlock);
-impl_tostring_for!(AesKey128);
-impl_tostring_for!(AesKey192);
-impl_tostring_for!(AesKey256);
+impl Display for AesKey {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", u8_array_to_string(&self.0))
+    }
+}
 
 // from methods
 fn str_to_u8_vec(data: &str) -> Vec<u8> {
@@ -45,32 +40,24 @@ fn str_to_u8_vec(data: &str) -> Vec<u8> {
         .collect::<Result<Vec<u8>, _>>()
         .unwrap()
 }
-macro_rules! str_to_u8_array {
-    ($str:expr, $n:expr) => {{
-        let vec = str_to_u8_vec($str);
-        assert_eq!(vec.len(), $n);
-        let mut data = [0u8; $n];
-        for i in 0..$n {
+impl From<&str> for AesBlock {
+    fn from(string: &str) -> Self {
+        let vec = str_to_u8_vec(string);
+        assert_eq!(vec.len(), 16);
+        let mut data = [0u8; 16];
+        for i in 0..16 {
             data[i] = vec[i];
         }
-        data
-    }};
+        Self { data }
+    }
 }
-macro_rules! impl_from_str_for {
-    ($type:ident, $n:expr) => {
-        impl From<&str> for $type {
-            fn from(string: &str) -> $type {
-                $type {
-                    data: str_to_u8_array!(string, $n),
-                }
-            }
-        }
-    };
+impl From<&str> for AesKey {
+    fn from(string: &str) -> Self {
+        let vec = str_to_u8_vec(string);
+        assert!(vec.len() == 16 || vec.len() == 24 || vec.len() == 32);
+        Self(vec)
+    }
 }
-impl_from_str_for!(AesBlock, 16);
-impl_from_str_for!(AesKey128, 16);
-impl_from_str_for!(AesKey192, 24);
-impl_from_str_for!(AesKey256, 32);
 
 macro_rules! impl_from_u8_slice_for {
     ($type:ident, $n:expr) => {
@@ -87,9 +74,6 @@ macro_rules! impl_from_u8_slice_for {
     };
 }
 impl_from_u8_slice_for!(AesBlock, 16);
-impl_from_u8_slice_for!(AesKey128, 16);
-impl_from_u8_slice_for!(AesKey192, 24);
-impl_from_u8_slice_for!(AesKey256, 32);
 
 // random generator
 macro_rules! impl_with_random_for {
@@ -105,9 +89,6 @@ macro_rules! impl_with_random_for {
     };
 }
 impl_with_random_for!(AesBlock, 16);
-impl_with_random_for!(AesKey128, 16);
-impl_with_random_for!(AesKey192, 24);
-impl_with_random_for!(AesKey256, 32);
 
 // u128 <-> AesBlock
 impl From<u128> for AesBlock {

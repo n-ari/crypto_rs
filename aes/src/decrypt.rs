@@ -1,5 +1,5 @@
 use crate::ops::{add_key, inv_mix_columns, inv_shift_rows, inv_sub_bytes, key_schedule};
-use crate::{Aes, AesBlock, AesDecrypt, AesKey};
+use crate::{AesBlock, AesKey};
 
 fn _debug_state(state: AesBlock) {
     for i in 0..4 {
@@ -11,21 +11,18 @@ fn _debug_state(state: AesBlock) {
     print!("\n");
 }
 
-impl<T: AesKey> AesDecrypt<T> for Aes {
-    fn decrypt(key: T, block: AesBlock) -> AesBlock {
-        let expanded_key = key_schedule(key);
-        let nround = expanded_key.len();
-        let mut state = block;
-        add_key(&mut state, expanded_key[nround - 1]);
+pub(crate) fn decrypt(key: &AesKey, rounds: usize, block: AesBlock) -> AesBlock {
+    let expanded_key = key_schedule(key, rounds);
+    let mut state = block;
+    add_key(&mut state, expanded_key[rounds]);
+    inv_shift_rows(&mut state);
+    inv_sub_bytes(&mut state);
+    for i in (1..rounds).rev() {
+        add_key(&mut state, expanded_key[i]);
+        inv_mix_columns(&mut state);
         inv_shift_rows(&mut state);
         inv_sub_bytes(&mut state);
-        for i in (1..(nround - 1)).rev() {
-            add_key(&mut state, expanded_key[i]);
-            inv_mix_columns(&mut state);
-            inv_shift_rows(&mut state);
-            inv_sub_bytes(&mut state);
-        }
-        add_key(&mut state, expanded_key[0]);
-        state
     }
+    add_key(&mut state, expanded_key[0]);
+    state
 }

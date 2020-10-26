@@ -35,10 +35,10 @@ fn square_to_aes_block(square: &[[u8; 4]]) -> AesBlock {
     }
 }
 
-pub fn key_schedule<T: AesKey>(key: T) -> Vec<AesBlock> {
-    let data = key.data();
+pub fn key_schedule(key: &AesKey, rounds: usize) -> Vec<AesBlock> {
+    let AesKey(data) = key;
     let num_key = data.len() / 4;
-    let mut expkey = vec![[0u8; 4]; 4 * (T::NUM_ROUND + 1)];
+    let mut expkey = vec![[0u8; 4]; 4 * (rounds + 1)];
     // key to words
     for i in 0..num_key {
         for j in 0..4 {
@@ -48,7 +48,7 @@ pub fn key_schedule<T: AesKey>(key: T) -> Vec<AesBlock> {
 
     // calculate expanded key
     let mut rc = 0x01u8;
-    for i in num_key..4 * (T::NUM_ROUND + 1) {
+    for i in num_key..4 * (rounds + 1) {
         expkey[i] = if i % num_key == 0 {
             let rc_ = rc;
             // update rc
@@ -65,8 +65,8 @@ pub fn key_schedule<T: AesKey>(key: T) -> Vec<AesBlock> {
     }
 
     // convert to [AesBlock; $nround]
-    let mut key = vec![AesBlock { data: [0u8; 16] }; T::NUM_ROUND + 1];
-    for i in 0..(T::NUM_ROUND + 1) {
+    let mut key = vec![AesBlock { data: [0u8; 16] }; rounds + 1];
+    for i in 0..(rounds + 1) {
         key[i] = square_to_aes_block(&expkey[4 * i + 0..4 * i + 4]);
     }
 
